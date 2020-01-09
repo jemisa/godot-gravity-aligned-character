@@ -5,4 +5,4 @@ This is based on a prototype I worked on.
 
 Please create an issue for any suggestions, or even better fork this repo, make your changes and submit a pull request!
 
-![](gravity-aligned-character.png?raw=true)
+![](gravity-aligned-character.gif?raw=true)
