@@ -1,0 +1,90 @@
+[gd_scene load_steps=10 format=2]
+
+[ext_resource path="res://GravityAlignedCharacter.gd" type="Script" id=1]
+[ext_resource path="res://default_env.tres" type="Environment" id=2]
+
+[sub_resource type="GDScript" id=7]
+script/source = "extends Spatial
+
+
+func _ready():
+	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	
+func _input(event):
+	if event is InputEventKey and event.is_pressed() and event.scancode == KEY_ESCAPE:
+		if Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
+			Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+		else:
+			Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+"
+
+[sub_resource type="SphereShape" id=1]
+radius = 10.0
+
+[sub_resource type="SpatialMaterial" id=6]
+albedo_color = Color( 0.949219, 0.0741577, 0.299759, 1 )
+roughness = 0.47
+
+[sub_resource type="SphereMesh" id=2]
+radius = 10.0
+height = 20.0
+radial_segments = 32
+
+[sub_resource type="SphereShape" id=3]
+radius = 20.0
+
+[sub_resource type="CapsuleShape" id=4]
+radius = 0.7
+
+[sub_resource type="CapsuleMesh" id=5]
+radius = 0.7
+
+[node name="World" type="Spatial"]
+script = SubResource( 7 )
+
+[node name="Planet" type="KinematicBody" parent="."]
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="CollisionShape" type="CollisionShape" parent="Planet"]
+shape = SubResource( 1 )
+
+[node name="MeshInstance" type="MeshInstance" parent="Planet/CollisionShape"]
+material_override = SubResource( 6 )
+mesh = SubResource( 2 )
+material/0 = null
+
+[node name="GravityField" type="Area" parent="Planet"]
+space_override = 1
+gravity_point = true
+gravity_vec = Vector3( 0, 0, 0 )
+
+[node name="CollisionShape" type="CollisionShape" parent="Planet/GravityField"]
+shape = SubResource( 3 )
+
+[node name="Character" type="KinematicBody" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 11.5, 0 )
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="CollisionShape" type="CollisionShape" parent="Character"]
+transform = Transform( 1, 0, 0, 0, -1.62921e-07, 1, 0, -1, -1.62921e-07, 0, 0, 0 )
+shape = SubResource( 4 )
+
+[node name="MeshInstance" type="MeshInstance" parent="Character/CollisionShape"]
+mesh = SubResource( 5 )
+material/0 = null
+
+[node name="Camera" type="Camera" parent="Character"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0 )
+current = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = ExtResource( 2 )
+
+[node name="DirectionalLight" type="DirectionalLight" parent="."]
+transform = Transform( -0.925163, 0.280335, -0.2559, 0, 0.674186, 0.738561, 0.379569, 0.68329, -0.623733, 9.64323, 18.6789, 0.33578 )
+shadow_enabled = true
